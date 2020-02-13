@@ -1,0 +1,11 @@
+---
+title: "index"
+author: "Paul Swenson"
+date: "2/12/2020"
+output: 
+  html_document:
+    df_print: paged
+---
+
+
+#Paul Swenson
