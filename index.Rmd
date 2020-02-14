@@ -1,0 +1,32 @@
+---
+title: "About Me"
+author: "Paul Swenson"
+date: "2/12/2020"
+output: 
+  html_document:
+    df_print: paged
+---
+
+
+I am a software engineer with a demonstrated history of leadership and teamwork. Proficient in C++ Python, and Java with skills in analysis, TCP/IP protocols, data manipulation, and statistics.
+
+
+# Hometown
+Born and raised in Arlington, TX, I later moved to San Antonio to finish my Bachelor's degree before moving back home to Arlington.
+
+# Interests and Hobbies
+I am a flautist, saxophonist, and guitarist. I also enjoy playing board games and disc golf.
+
+# Employment
+I am an associate software engineer at Lockheed Martin Missiles and Fire Control. My day to day role involves the creation of TCP/IP interfaces and maintaining a large code base within a small engineering team.
+
+# Education
+### The University of Texas at San Antonio
+2016-2018
+Bachelor of Science in Computer Science with a concentration in Data Science
+
+### Southern Methodist University
+2019-Now
+Master of Science in Data Science with a Machine Learning Specialization
+
+
