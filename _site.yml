@@ -1,6 +1,0 @@
-name: "Website"
-navbar:
-  title: "Paul Swenson"
-  left:
-    - text: "About Me"
-      href: index.html
