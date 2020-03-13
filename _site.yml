@@ -1,0 +1,8 @@
+name: "Paul Swenson"
+navbar:
+  title: "Paul Swenson"
+  left:
+    - text: "About Me"
+      href: index.html
+    - text: "Beer Case Study"
+      href: Project1.html
