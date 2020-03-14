@@ -18,6 +18,7 @@ library(reshape2)  # for melt
 library(MASS)      # for stepAIC
 library(e1071)   # for naiveBayes
 library(jtools)    # for plot_summs
+library(readxl)    # for readxl
 ```
 
 #Import data
@@ -46,17 +47,8 @@ data[22] <- lapply(data[22], as.numeric)
 data[25,] <- lapply(data[25,], as.numeric)
 
 
-left <- data %>% filter(Attrition != "No")
-stayed <- data %>% filter(Attrition == "No")
-
-#for(col in 2:ncol(data))
-#{
-#  if(is.numeric(data[,col]))
-#  {
-#    hist(left[,col], col=rgb(1,0,0,0.5), main=col, xlab=col)
-#    hist(stayed[,col], col=rgb(0,0,1,0.5), add=T)
-#  }
-#}
+left <- data %>% dplyr::select(c("Attrition", "OverTime", "StockOptionLevel", "MaritalStatus")) %>% filter(Attrition != "No")
+stayed <- data %>% dplyr::select(c("Attrition", "OverTime", "StockOptionLevel", "MaritalStatus")) %>% filter(Attrition == "No")
 
 #TODO: remove NA values when plotting
 plt <- ggplot(data, aes(x=JobRole, y=MonthlyIncome)) + 
@@ -282,8 +274,20 @@ plot_summs(step.model)
 
 ```
 
+# Generate Prediction csvs
+```{r}
+# note: the "no attrition" dataset was modifed to contain 0 or 1 for attrition values and after saving the reverse was done
+attrition_data <- read.csv("./CaseStudy2CompSet No Attrition.csv")
+salary_data <- readxl::read_xlsx("./CaseStudy2CompSet No Salary.xlsx")
 
+attrition_data$PredAttrition <- predict(train_data.nb, attrition_data)
+attrition_data <- attrition_data %>% dplyr::select("ID", "PredAttrition")
+write.csv(attrition_data, "Case2PredictionsSwenson Attrition.csv", row.names=FALSE)
 
+salary_data$PredMonthlyIncome <- predict(step.model, salary_data)
+salary_data <- salary_data %>% dplyr::select("ID", "PredMonthlyIncome")
+write.csv(salary_data, "Case2PredictionsSwenson Salary.csv", row.names = FALSE)
+```
 
 
 

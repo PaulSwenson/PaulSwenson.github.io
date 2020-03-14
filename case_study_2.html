@@ -308,7 +308,8 @@ library(GGally)
 library(reshape2)  # for melt
 library(MASS)      # for stepAIC
 library(e1071)   # for naiveBayes
-library(jtools)    # for plot_summs</code></pre>
+library(jtools)    # for plot_summs
+library(readxl)    # for readxl</code></pre>
 <p>#Import data</p>
 <pre class="r"><code>data = read.csv(&quot;./CaseStudy2-data.csv&quot;)
 # Note: the attrition column was converted to 0 for No and 1 for Yes
@@ -349,23 +350,14 @@ data[25,] &lt;- lapply(data[25,], as.numeric)</code></pre>
 
 ## Warning in `[&lt;-.factor`(`*tmp*`, iseq, value = 3): invalid factor level, NA
 ## generated</code></pre>
-<pre class="r"><code>left &lt;- data %&gt;% filter(Attrition != &quot;No&quot;)
-stayed &lt;- data %&gt;% filter(Attrition == &quot;No&quot;)
-
-#for(col in 2:ncol(data))
-#{
-#  if(is.numeric(data[,col]))
-#  {
-#    hist(left[,col], col=rgb(1,0,0,0.5), main=col, xlab=col)
-#    hist(stayed[,col], col=rgb(0,0,1,0.5), add=T)
-#  }
-#}
+<pre class="r"><code>left &lt;- data %&gt;% dplyr::select(c(&quot;Attrition&quot;, &quot;OverTime&quot;, &quot;StockOptionLevel&quot;, &quot;MaritalStatus&quot;)) %&gt;% filter(Attrition != &quot;No&quot;)
+stayed &lt;- data %&gt;% dplyr::select(c(&quot;Attrition&quot;, &quot;OverTime&quot;, &quot;StockOptionLevel&quot;, &quot;MaritalStatus&quot;)) %&gt;% filter(Attrition == &quot;No&quot;)
 
 #TODO: remove NA values when plotting
 plt &lt;- ggplot(data, aes(x=JobRole, y=MonthlyIncome)) + 
   geom_boxplot()
 plt + theme(axis.text.x = element_text(angle = 60, hjust = 1))</code></pre>
-<p><img src="case_study_2_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="case_study_2_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
 <pre class="r"><code>#TODO: count the number of employees in each role</code></pre>
 <div id="more-eda" class="section level1">
 <h1>More EDA</h1>
@@ -972,7 +964,7 @@ RMSE(pred_actual$PredictedMonthlyIncome, pred_actual$MonthlyIncome, na.rm=TRUE)<
 ##          YearsWithCurrManager 
 ##                   -39.6481800</code></pre>
 <pre class="r"><code>plot_summs(step.model)</code></pre>
-<p><img src="case_study_2_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="case_study_2_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
 </div>
 <div id="log-transformation" class="section level1">
 <h1>Log transformation</h1>
@@ -1001,6 +993,20 @@ RMSE(pred_actual$PredictedMonthlyIncome, pred_actual$MonthlyIncome, na.rm=TRUE)<
 #pred_actual &lt;- lm_test_data %&gt;% dplyr::select( c(&quot;MonthlyIncome&quot;, &quot;PredictedMonthlyIncome&quot;, &quot;ID&quot;) )
 #RMSE(2.7183 ** pred_actual$PredictedMonthlyIncome, 2.7183 ** pred_actual$MonthlyIncome, na.rm=TRUE)</code></pre>
 <pre class="r"><code>#TODO: check regression assumptions for the first model.</code></pre>
+</div>
+<div id="generate-prediction-csvs" class="section level1">
+<h1>Generate Prediction csvs</h1>
+<pre class="r"><code># note: the &quot;no attrition&quot; dataset was modifed to contain 0 or 1 for attrition values and after saving the reverse was done
+attrition_data &lt;- read.csv(&quot;./CaseStudy2CompSet No Attrition.csv&quot;)
+salary_data &lt;- readxl::read_xlsx(&quot;./CaseStudy2CompSet No Salary.xlsx&quot;)
+
+attrition_data$PredAttrition &lt;- predict(train_data.nb, attrition_data)
+attrition_data &lt;- attrition_data %&gt;% dplyr::select(&quot;ID&quot;, &quot;PredAttrition&quot;)
+write.csv(attrition_data, &quot;Case2PredictionsSwenson Attrition.csv&quot;, row.names=FALSE)
+
+salary_data$PredMonthlyIncome &lt;- predict(step.model, salary_data)
+salary_data &lt;- salary_data %&gt;% dplyr::select(&quot;ID&quot;, &quot;PredMonthlyIncome&quot;)
+write.csv(salary_data, &quot;Case2PredictionsSwenson Salary.csv&quot;, row.names = FALSE)</code></pre>
 </div>
 
 
