@@ -1,0 +1,8 @@
+name: "paul-website"
+navbar:
+  title: "Paul's Website"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Case Study 2"
+      href: case_study_2.html
